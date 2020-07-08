@@ -96,7 +96,7 @@ check_opt(char *opt)
 
 
 static char *
-get_argv_optv(char *cmd_line)
+get_argv_optv(char *cmd_line) //strtok에 의해 공백을 기준으로 쪼개서 argv, optv에 저장 argc, optc는 카운팅증가 
 {
 	char *tok;
 	argc = optc = 0;
@@ -426,7 +426,8 @@ id(void)
 
 
 
-	/*
+	/* 
+	더미데이터 
 	if(argc == 1)
 	{
 		pwp = getpwnam(*argv);
@@ -478,7 +479,7 @@ ls(void)
 }
 
 void
-makedir(void)
+makedir(void) //mkdir함수 
 {
 	if(mkdir(argv[0], 0755) <0)
 	{
@@ -518,7 +519,7 @@ rm(void)
 }
 
 void
-removedir(void)
+removedir(void) //rmdir 함수
 {
 	if(rmdir(argv[0]) < 0)
 	{
@@ -579,7 +580,7 @@ Sleep(void)
 }
 
 void
-touch(void)
+touch(void) //해당파일을 현재시간으로 바꿈 (만약 파일이 없으면 크기 0 파일생성) 
 {
 	int fd;
 
@@ -613,7 +614,7 @@ unixname(void)
 }
 
 void
-whoami(void)
+whoami(void) 
 {
 	struct passwd *pwp;
 
@@ -628,7 +629,8 @@ whoami(void)
 		printf("NULL\n");
 	}
 
-    /*
+    /*  더미코드
+        
 	char *username = getpwuid();
 	
 	if(username != NULL)
@@ -639,12 +641,12 @@ whoami(void)
 	{
 		printf("NULL\n");
 	}
-	*/
+   */
 
 }
 
 void
-quit(void)
+quit(void) // 리눅스상에서 제공해주는 인터럽트 종료함수 exit 호출 
 {
 	exit(0);
 }
@@ -707,13 +709,13 @@ help(void)
 }
 
 void
-proc_cmd(void)
+proc_cmd(void) //명령어 숫자 혹은 옵션이 잘된됬는지 체크하는 함수 
 {
 	int  k;
 
 	for (k = 0; k < num_cmd; ++k) 
 		{	
-		if (EQUAL(cmd, cmd_tbl[k].cmd)) 
+		if (EQUAL(cmd, cmd_tbl[k].cmd)) //EQUAL은 매크로상수로 지정되어있어 전처리기에 의해 컴파일시 가장먼저 변환됨 
 			{
 
 			if ((check_arg(cmd_tbl[k].argc) < 0) || 	
@@ -746,13 +748,13 @@ main(int argc, char *argv[])
 	getcwd(cur_work_dir, SZ_STR_BUF);
 
 	for (;;) {
-		printf("<%s> %d: ",cur_work_dir,cmd_count);		
+		printf("<%s> %d: ",cur_work_dir,cmd_count); //현재위치 출력과 쉘스크립트 입력된 카운팅 개수 (기준은 '\n')
 
-		fgets(cmd_line, SZ_STR_BUF, stdin);	
+		fgets(cmd_line, SZ_STR_BUF, stdin); // << help를 출력후 여기서 대기 
 
-		if (get_argv_optv(cmd_line) != NULL) {
-			proc_cmd();	// 한 명령어 처리 
-			cmd_count++;
+		if (get_argv_optv(cmd_line) != NULL) { //아무것도 입력안될경우 통과 
+			proc_cmd();	// 한 명령어 처리 (strtok에 의해 잘 쪼개져서 argv argc optv optc 에 값 변경) 
+			cmd_count++; //쉘 스크립트 카운터 증가 
 		}
 	}
 }
